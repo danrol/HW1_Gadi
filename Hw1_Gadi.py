@@ -1,3 +1,8 @@
+'''Students:
+Full Name: Eden Dupont   ID: 204808596
+Full Name: Daniil Rolnik ID: 334018009
+'''
+
 import heapq
 import functools
 
