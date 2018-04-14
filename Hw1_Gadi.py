@@ -50,56 +50,92 @@ def flatten(alist):
     return reduced_list
 
 
+def dijkstra_helper(weights, source, target):
+    g = dict([])
+
+    for edges_set, duration in weights.items():
+        tmp_lst = list(edges_set)
+        if (tmp_lst[0] not in g.keys()):
+            g[tmp_lst[0]] = []
+        g[tmp_lst[0]].append((duration, tmp_lst[1]))
+
+    q, seen = [(0,source,())], set()
+    while q:
+        (duration,v1,path) = heapq.heappop(q)
+        if v1 not in seen:
+            seen.add(v1)
+            path = (v1, path)
+
+            if v1 == target:
+                return duration
+
+            for d, v2 in g.get(v1, ()):
+                if v2 not in seen:
+                    heapq.heappush(q, (duration+d, v2, path))
+
+
 def dijkstra(graph, weights, source):
-    INFINITY = 1000000
-    weights_from_source = init_heap(graph)
-    for node in graph.keys():
-        node_tuple = weights_from_source.remove(node)
-        node_tuple.weight = shortest_path_from_source(find_all_paths(graph, source, node), weights)
-        weights_from_source.
-
-    return weights_from_source
-
-
-def shortest_path_from_source(path_list, weights):
-    INFINITY = 1000000
-    min_path = INFINITY
-    for path in path_list:
-        current_path_length = 0
-        for index in (len(path)-1):
-            current_path_length += weights.get((path(index), path(index+1)))
-        if current_path_length < min_path:
-            min_path = current_path_length
-    if min_path >= 1000000:
-        return 'infinity'
-    return min_path
+    result = dict()
+    for vertex_target in graph.keys():
+        minimal_duration = dijkstra_helper(weights, source, vertex_target)
+        if minimal_duration == None:
+            minimal_duration = 'infinity'
+        result[vertex_target] = minimal_duration
+    return result
 
 
-def init_heap(graph):
-    init_list = []
-    for node in graph:
-        init_list.append((node, 0))
-    heapq.heapify(init_list)
-    return init_list
 
 
-def find_all_paths(self, graph, start_vertex, end_vertex):
-    """ find all paths from start_vertex to
-        end_vertex in graph """
-    path = []
-    path = path + [start_vertex]
-    if start_vertex == end_vertex:
-        return [path]
-    if start_vertex not in graph.keys():
-        return []
-    paths = []
-    for next_nodes in graph[start_vertex]:
-        for vertex in next_nodes:
-            if vertex not in path:
-                extended_paths = self.find_all_paths(graph, vertex, end_vertex, path)
-                for p in extended_paths:
-                    paths.append(p)
-    return paths
+# def dijkstra(graph, weights, source):
+#     INFINITY = 1000000
+#     weights_from_source = init_heap(graph)
+#     for node in graph.keys():
+#         node_tuple = weights_from_source.remove(node)
+#         node_tuple.weight = shortest_path_from_source(find_all_paths(graph, source, node), weights)
+#         weights_from_source.
+#
+#     return weights_from_source
+
+
+# def shortest_path_from_source(path_list, weights):
+#     INFINITY = 1000000
+#     min_path = INFINITY
+#     for path in path_list:
+#         current_path_length = 0
+#         for index in (len(path)-1):
+#             current_path_length += weights.get((path(index), path(index+1)))
+#         if current_path_length < min_path:
+#             min_path = current_path_length
+#     if min_path >= 1000000:
+#         return 'infinity'
+#     return min_path
+
+
+# def init_heap(graph):
+#     init_list = []
+#     for node in graph:
+#         init_list.append((node, 0))
+#     heapq.heapify(init_list)
+#     return init_list
+
+
+# def find_all_paths(self, graph, start_vertex, end_vertex):
+#     """ find all paths from start_vertex to
+#         end_vertex in graph """
+#     path = []
+#     path = path + [start_vertex]
+#     if start_vertex == end_vertex:
+#         return [path]
+#     if start_vertex not in graph.keys():
+#         return []
+#     paths = []
+#     for next_nodes in graph[start_vertex]:
+#         for vertex in next_nodes:
+#             if vertex not in path:
+#                 extended_paths = self.find_all_paths(graph, vertex, end_vertex, path)
+#                 for p in extended_paths:
+#                     paths.append(p)
+#     return paths
 
 
 # start tests
@@ -144,3 +180,4 @@ if __name__ == "__main__":
     test_sumdigits2()
     test_flatten()
     test_dijkstra()
+
