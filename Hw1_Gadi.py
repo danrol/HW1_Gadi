@@ -7,16 +7,9 @@ def upper_half(matrix):
         return []
     for i_index, i in enumerate(matrix):
         for j_index, j in enumerate(i):
-            try:
-                if j_index < i_index:
-                    matrix[i_index][j_index] = None
-                    continue
-                break
-            except IndexError as e:
-                print(e)
-            except Exception as e:
-                print(e)
-
+            if j_index < i_index:
+                matrix[i_index][j_index] = None
+                continue
     return matrix
 
 
@@ -35,12 +28,10 @@ def assure_positive(num):
         return num
 
 
+
 def sum_digits1(n):
     sum_n = 0
-    try:
-        n = assure_positive(n)
-    except TypeError as e:
-        print(e)
+    n = assure_positive(n)
 
     while n != 0:
         sum_n += n % 10
@@ -99,7 +90,8 @@ def dijkstra(graph, weights, source):
 def test_upper_half():
     matrix = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 'spam'], [11, 12, 13, 14, 15], [16, 'stam', 18, 19, 20]]
     assert (upper_half([]) == [])
-    assert (upper_half(matrix) == [[1, 2, 3, 4, 5], [None, 7, 8, 9, 'spam'], [None, None, 13, 14, 15], [None, None, None, 19, 20]])
+    assert (upper_half(matrix) == [[1, 2, 3, 4, 5], [None, 7, 8, 9, 'spam'],
+                                   [None, None, 13, 14, 15], [None, None, None, 19, 20]])
 
 
 def test_encrypt():
@@ -113,9 +105,10 @@ def test_sum_digits1():
     assert (sum_digits1(1493) == 17)
     assert (sum_digits1(0) == 0)
 
-
 def test_sumdigits2():
-    test_sum_digits1()
+    assert (sum_digits2(-1492) == 16)
+    assert (sum_digits2(1493) == 17)
+    assert (sum_digits2(0) == 0)
 
 
 def test_flatten():
@@ -126,6 +119,7 @@ def test_dijkstra():
     graph = {'a': ['b', 'c'], 'b': ['d'], 'c': [], 'd': ['c', 'e'], 'e': [], 'f': ['e']}
     weights = {('a', 'b'): 2, ('a', 'c'): 10, ('b', 'd'): 3, ('d', 'c'): 1, ('d', 'e'): 12, ('f', 'e'): 0}
     assert (dijkstra(graph, weights, 'a') == {'a': 0, 'b': 2, 'c': 6, 'd': 5, 'e': 17, 'f': 'infinity'})
+    assert (dijkstra(dict(), dict(), 'a') == dict())
 
 
 if __name__ == "__main__":
