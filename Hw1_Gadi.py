@@ -17,7 +17,10 @@ def encrypt(string, key=1):
     size_alphabet = 26
     encrypted = ''
     for i in string:
-        encrypted += chr(ord('a') + (((ord(i) + (key % size_alphabet)) - ord('a')) % size_alphabet))
+        if (ord(i) >= ord('a')) and (ord(i) <= ord('z')):
+            encrypted += chr(ord('a') + (((ord(i) + (key % size_alphabet)) - ord('a')) % size_alphabet))
+        else:
+            encrypted += i
     return encrypted
 
 
@@ -26,7 +29,6 @@ def assure_positive(num):
         return num * -1
     else:
         return num
-
 
 
 def sum_digits1(n):
@@ -55,13 +57,13 @@ def dijkstra_helper(weights, source, target):
 
     for edges_set, duration in weights.items():
         tmp_lst = list(edges_set)
-        if (tmp_lst[0] not in g.keys()):
+        if tmp_lst[0] not in g.keys():
             g[tmp_lst[0]] = []
         g[tmp_lst[0]].append((duration, tmp_lst[1]))
 
-    q, seen = [(0,source,())], set()
+    q, seen = [(0, source, ())], set()
     while q:
-        (duration,v1,path) = heapq.heappop(q)
+        (duration, v1, path) = heapq.heappop(q)
         if v1 not in seen:
             seen.add(v1)
             path = (v1, path)
@@ -78,14 +80,13 @@ def dijkstra(graph, weights, source):
     result = dict()
     for vertex_target in graph.keys():
         minimal_duration = dijkstra_helper(weights, source, vertex_target)
-        if minimal_duration == None:
+        if minimal_duration is None:
             minimal_duration = 'infinity'
         result[vertex_target] = minimal_duration
     return result
 
 
-# start tests
-
+                                                #####start tests#####
 
 def test_upper_half():
     matrix = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 'spam'], [11, 12, 13, 14, 15], [16, 'stam', 18, 19, 20]]
@@ -97,7 +98,11 @@ def test_upper_half():
 def test_encrypt():
     assert (encrypt("spam") == "tqbn")
     assert (encrypt("spaz") == "tqba")
+    assert (encrypt("xyzw", 26) == "xyzw")
+    assert (encrypt("xyzw", 10) == "hijg")
     assert (encrypt("spam", 3) == "vsdp")
+    assert (encrypt(" a T", 3) == " d T")
+    assert (encrypt("ABCDE", 10) == "ABCDE")
 
 
 def test_sum_digits1():
@@ -105,7 +110,8 @@ def test_sum_digits1():
     assert (sum_digits1(1493) == 17)
     assert (sum_digits1(0) == 0)
 
-def test_sumdigits2():
+
+def test_sum_digits2():
     assert (sum_digits2(-1492) == 16)
     assert (sum_digits2(1493) == 17)
     assert (sum_digits2(0) == 0)
@@ -113,6 +119,8 @@ def test_sumdigits2():
 
 def test_flatten():
     assert (flatten([[1, 2, 3], ['foo', 'bar'], [], [[1, 2], [3]]]) == [1, 2, 3, 'foo', 'bar', [1, 2], [3]])
+    assert (flatten([[1, 2], [['foo', 'bar', 'goo'], [2, 5]], [1], [5, 2, 5]]) == [1, 2, ['foo', 'bar', 'goo'], [2, 5], 1, 5, 2, 5])
+    assert (flatten([[1], [2], [[4, 5], ['e', 'c', 'f', [2, 3]]], [6], [7], [8], [5, 7]]) == [1, 2, [4, 5], ['e', 'c', 'f', [2, 3]], 6, 7, 8, 5, 7])
 
 
 def test_dijkstra():
@@ -126,7 +134,6 @@ if __name__ == "__main__":
     test_upper_half()
     test_encrypt()
     test_sum_digits1()
-    test_sumdigits2()
+    test_sum_digits2()
     test_flatten()
     test_dijkstra()
-
